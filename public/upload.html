@@ -100,22 +100,25 @@
         var uploading = savePath.put(file);
         
         uploading.on( 'state_changed', 
-            // 변화시 동작하는 함수 
+            // function when it changed
             null, 
-            //에러시 동작하는 함수
+            // function when it failed
             (error) => {
                console.error('실패사유는', error);
             }, 
-            // 성공시 동작하는 함수
+            // function when it worked
             () => {
             uploading.snapshot.ref.getDownloadURL().then((url) => {
                 console.log('업로드된 경로는', url);
+
                 var input = {
                     title : $('#title').val() ,
                     price : $('#price').val() ,
                     content : $('#content').val() ,
-                    data : new Date(),
-                    image: url
+                    date : new Date(),
+                    image: url,
+                    uid: JSON.parse(localStorage.getItem('user')).uid,
+                    userNmae : JSON.parse(localStorage.getItem('user')).displayName
                 }
 
                 db.collection('product').add(input).then((result)=>{
