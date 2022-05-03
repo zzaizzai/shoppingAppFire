@@ -104,12 +104,12 @@
             null, 
             // function when it failed
             (error) => {
-               console.error('실패사유는', error);
+               console.error('Failed:', error);
             }, 
             // function when it worked
             () => {
             uploading.snapshot.ref.getDownloadURL().then((url) => {
-                console.log('업로드된 경로는', url);
+                console.log('Upload Path:', url);
 
                 var input = {
                     title : $('#title').val() ,
@@ -118,7 +118,7 @@
                     date : new Date(),
                     image: url,
                     uid: JSON.parse(localStorage.getItem('user')).uid,
-                    userNmae : JSON.parse(localStorage.getItem('user')).displayName
+                    userName : JSON.parse(localStorage.getItem('user')).displayName
                 }
 
                 db.collection('product').add(input).then((result)=>{

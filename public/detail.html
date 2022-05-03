@@ -64,14 +64,15 @@
 
   <div class="container">
     Detial Page
-    <button id="edit">Edit</button>
-    <div class="detail-pic my-4" style="background-image: url('https://placeimg.com/640/380/tech');"></div>
+    <div class="detail-pic my-4" style="background-image: url('');"></div>
     <div>
-      <h5>Uploader : Unknown</h5>
+      <h5 class="author"></h5>
       <hr>
       <h5 class="title"></h5>
       <p class="date"></p>
       <p class="price"></p>
+      <button class="btn btn-outline-secondary" id="edit">Edit</button>
+      <button class="btn btn-outline-secondary" id="chat">Chat</button>
     </div>
 </div>
 
@@ -95,13 +96,23 @@
 
     const db = firebase.firestore();
     const storage = firebase .storage();
+
+    var myUid = JSON.parse(localStorage.getItem('user')).uid
+    var sellerUid;
+    var producTitle;
     
     //get id from current URL
     var queryString = new URLSearchParams(window.location.search);
     
 
     db.collection('product').doc(queryString.get('id')).get().then((result)=> {
+
+             sellerUid = result.data().uid;
+             productTitle = result.data().title;
+
+
              console.log(result.data());
+             $('.author').html('Uploader: ' + result.data().userName)
              $('.title').html(result.data().title)
              $('.price').html(result.data().price)
              $('.detail-pic').css('background-image', `url(${result.data().image})` )
@@ -109,6 +120,18 @@
 
     $('#edit').click(function() {
         window.location.href = '/edit.html?id=' + queryString.get('id')
+    })
+
+    $('#chat').click(function() {
+      var data = {
+        who: [myUid, sellerUid],
+        product: productTitle,
+        date: new Date(),
+      }
+      db.collection('chatroom').add(data).then((result)=> {
+        window.location.href= '/chat.html?id=' + result.id
+      })
+      
     })
 
 
