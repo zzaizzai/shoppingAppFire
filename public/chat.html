@@ -109,7 +109,19 @@
     const db = firebase.firestore();
     const storage = firebase .storage();
     var myUid = JSON.parse(localStorage.getItem('user')).uid;
+    var chatId;
 
+    $('#send').click(function(){
+      var data = {
+        content: $('#chat-input').val(),
+        date: new Date(),
+        uid: myUid,
+
+      }
+      db.collection('chatroom').doc(chatId).collection('messages').add(data)
+    })
+
+    
     db.collection('chatroom').where('who', 'array-contains', myUid ).get().then((result)=>{
         result.forEach((a)=> {
             console.log(a.data())
@@ -121,6 +133,31 @@
             <h6 class="text-small">${a.id}</h6>
           </li>`
           $('.chat-list').append(template)
+
+
+
+          $('.list-group-item').click(function(){
+           chatId = $(this).children('.text-small').text();
+
+           //stop event bubbling
+          //  e.stopImmediatePropagation();
+          
+
+           db.collection('chatroom').doc(chatId).collection('messages').orderBy('date').onSnapshot((result)=> {
+            $('.chat-content').html('')
+             result.forEach((a)=> {
+              
+               console.log(a.data())
+               
+               
+              var chatContent =
+              `
+              <li><span class="chat-box">${a.data().content}</span></li>
+              `;
+              $('.chat-content').append(chatContent)
+             })
+           })
+          })
         })
     })
 
