@@ -7,3 +7,12 @@ firebase init
 firebase serve --port=9000
 
 http://127.0.0.1:9000/
+
+
+
+shoppingappfirebase-823de.firebaseapp.com
+
+
+Study from
+
+https://www.youtube.com/watch?v=9RkXchEJgKU
