@@ -66,28 +66,19 @@
     </div>
   </nav>
 
-  <div class="container mt-3">
-    <div class="mb-3">
-      <input type="text" class="form-control" placeholder="name" id="name-new">
-    </div>
-    <div class="mb-3">
-      <input type="email" class="form-control" placeholder="email" id="email-new">
-    </div>
-    <div class="mb-3">
-      <input type="password" class="form-control" placeholder="pw" id="pw-new">
-    </div>
-    <button type="submit" class="btn btn-primary" id="register">Sign Up</button>
- </div>
 
  <div class="container mt-3">
   <div class="mb-3">
-    <input type="email" class="form-control" placeholder="email" id="email">
+    <input type="email" class="form-control" placeholder="email" id="email" value="test@gmail.com">
   </div>
   <div class="mb-3">
-    <input type="password" class="form-control" placeholder="pw" id="pw">
+    <input type="password" class="form-control" placeholder="pw" id="pw" value="password">
   </div>
   <button type="submit" class="btn btn-primary" id="login">login</button>
   <button type="submit" class="btn btn-primary" id="logout">logout</button>
+  <p></p>
+  <p><a href="/register.html">go to regist</a></p>
+  
 </div>
 
   </div>
@@ -132,6 +123,7 @@
           var userdb = {
           userName : name,
           userEmail :email,
+          role: 'general'
         }
 
         db.collection('user').doc(result.user.uid).set(userdb)

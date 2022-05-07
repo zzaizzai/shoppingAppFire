@@ -9,6 +9,10 @@ service cloud.firestore {
     allow read, write: if true;
     }
     
+    match /chatroom/{docid}/messages/{docid2}{
+    allow read, write: if true;
+    }
+    
     match /user/{docid}{
     	allow read, write: if true;
     }
