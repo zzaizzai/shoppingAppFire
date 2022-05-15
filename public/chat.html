@@ -127,7 +127,7 @@
 
     db.collection('chatroom').where('who', 'array-contains', myUid).get().then((result) => {
       result.forEach((a) => {
-        console.log(a.data())
+        console.log(a.data()) 
 
 
         var template =

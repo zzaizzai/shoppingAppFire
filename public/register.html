@@ -16,12 +16,11 @@
 <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-  crossorigin="anonymous"></script>
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="main.css">
 
 
 <body>
@@ -29,7 +28,8 @@
     <div class="container-fluid">
       <a class="navbar-brand" href="#">ShoppingMall</a>
       <span class="ms-auto mx-2" id="userName"></span>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -74,10 +74,17 @@
       <input type="email" class="form-control" placeholder="email" id="email-new">
     </div>
     <div class="mb-3">
-      <input type="password" class="form-control" placeholder="pw" id="pw-new">
+      <input type="password" class="form-control" placeholder="password" id="pw-new">
+    </div>
+    <div class="mb-3">
+      <input type="password" class="form-control" placeholder="password check" id="pw-new-check">
     </div>
     <button type="submit" class="btn btn-primary" id="register">Sign Up</button>
- </div>
+    <div type="text" class="flex-grow-1">
+      <p class="error-message text-danger" id="error-message"></p>
+    </div>
+  </div>
+
 
   </div>
 
@@ -91,47 +98,65 @@
       messagingSenderId: "368319933416",
       appId: "1:368319933416:web:b6e72ff435d54f85c8525d",
     };
-      firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
   </script>
 
   <script>
 
+
+
+
+
     const db = firebase.firestore();
-    const storage = firebase .storage();
+    const storage = firebase.storage();
+    var errorMessage;
 
 
 
-    firebase.auth().onAuthStateChanged((user)=> {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        
+
         console.log(user)
         console.log(user.displayName)
-        localStorage.setItem("user" ,JSON.stringify(user))
-      } 
+        localStorage.setItem("user", JSON.stringify(user))
+      }
     })
 
     //Sign Up
-    $('#register').click(function(){
-        var email = $('#email-new').val();
-        var password = $('#pw-new').val();
-        var name = $('#name-new').val();
+    $('#register').click(function () {
+      var email = $('#email-new').val();
+      var password = $('#pw-new').val();
+      var passwordCheck = $('#pw-new-check').val();
+      var name = $('#name-new').val();
 
-        firebase.auth().createUserWithEmailAndPassword(email, password).then((result)=> {
+      //check input info, string lentgh and password check 
+      if (name.length < 4 ||  name.length > 21) {
+        $('#error-message').html('Error: The name must be 4 ~ 20 characters');
+      } else if (password != passwordCheck) {
+        $('#error-message').html('Error: password check wrong!');
+      } else {
+
+        //firebase register function
+        firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
 
           var userdb = {
-          userName : name,
-          userEmail :email,
-          role: 'general'
-        }
+            userName: name,
+            userEmail: email,
+            role: 'general'
+          }
 
-        db.collection('user').doc(result.user.uid).set(userdb)
+          db.collection('user').doc(result.user.uid).set(userdb)
 
-        console.log(result);
-        console.log(result.user);
+          console.log(result);
+          console.log(result.user);
 
-        result.user.updateProfile({displayName: name}).then(()=> {
-        })        
-      })
+          result.user.updateProfile({ displayName: name }).then(() => {
+          })
+        }).catch((error)=>{
+          $('#error-message').html('Error:' + error.message);
+
+        })
+      }
     })
 
 
