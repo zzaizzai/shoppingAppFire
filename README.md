@@ -1,7 +1,6 @@
-studying...
--------------
+## studying...
 
-###npm install -g firebase-tools@9.23.1
+npm install -g firebase-tools@9.23.1
 
 firebase init   
 -> firesotre, storage, hosting, 
