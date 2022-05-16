@@ -38,7 +38,7 @@
             <a class="nav-link active" aria-current="page" href="/index.html">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/login.html">LoagIn</a>
+            <a class="nav-link" href="/login.html">Log In</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/upload.html">Upload</a>
@@ -118,7 +118,7 @@
 
         console.log(user)
         console.log(user.displayName)
-        localStorage.setItem("user", JSON.stringify(user))
+        sessionStorage.setItem("user", JSON.stringify(user))
       }
     })
 
@@ -130,7 +130,7 @@
       var name = $('#name-new').val();
 
       //check input info, string lentgh and password check 
-      if (name.length < 4 ||  name.length > 21) {
+      if (name.length < 4 || name.length > 21) {
         $('#error-message').html('Error: The name must be 4 ~ 20 characters');
       } else if (password != passwordCheck) {
         $('#error-message').html('Error: password check wrong!');
@@ -152,7 +152,7 @@
 
           result.user.updateProfile({ displayName: name }).then(() => {
           })
-        }).catch((error)=>{
+        }).catch((error) => {
           $('#error-message').html('Error:' + error.message);
 
         })
