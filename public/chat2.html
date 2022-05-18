@@ -24,6 +24,7 @@
 
 
 <body>
+
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">ShoppingMall</a>
@@ -40,27 +41,15 @@
             <a class="nav-link" href="/login.html">Log In</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/upload.html">Upload</a>
-          </li>
-          <!-- <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Action</aq></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul> -->
+            <a class="nav-link" href="/mypage.html">Mypage</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
+            <a class="nav-link" href="/upload.html">Upload</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/chat2.html">Chat2</a>
           </li>
         </ul>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
       </div>
     </div>
   </nav>
@@ -139,10 +128,11 @@
         console.log(receiver_uid)
 
 
+        //will: display seller name, delete chatid, receovere uid
         var template =
           `<li class="list-group-item">
-            <h6>${a.data().product}</h6>
-            <p id="chatID">${a.id}</p>
+            <h6>product: ${a.data().product}</h6>
+            <p class="text-small" id="chatID">${a.id}</p>
             <p class="text-small" id="receiver_uid" >${receiver_uid}</p>
           </li>`
         $('.chat-list').append(template)
@@ -156,6 +146,10 @@
         console.log(chatID)
         console.log(receiverUid)
 
+        //express current chatroom
+        $('.list-group-item').removeClass('active')
+        $(this).addClass('active')
+
         //stop event bubbling
         e.stopImmediatePropagation();
 
@@ -164,18 +158,31 @@
           $('.chat-content').html('')
           result.forEach((a) => {
 
+            var timeYear = a.data().date.toDate().getFullYear()
+            var timeMonth = ("0" + (a.data().date.toDate().getMonth() + 1)).slice(-2);
+            var timeDate = ("0" + a.data().date.toDate().getDate()).slice(-2);
+            var timeHour = ("0" + a.data().date.toDate().getHours()).slice(-2);
+            var timeMin = ("0" + a.data().date.toDate().getMinutes()).slice(-2);
+            var displayTime = timeMonth + "." + timeHour + " " + timeDate + ":" + timeMin;
+
+
             // console.log('sender:' + a.data().sender_uid)
             if (a.data().sender_uid != myUid) {
               var chatContent =
                 `
-              <li><span class="chat-box">${a.data().content}</span></li>
+                <li><span class="text-small">${displayTime}</span></li>
+              <li> <span class="chat-box">${a.data().content}</span></li>
               `;
               $('.chat-content').append(chatContent)
 
             } else if (a.data().sender_uid == myUid) {
               var chatContent =
                 `
-              <li><span class="chat-box mine">${a.data().content}</span></li>
+              <li><span class= "mine text-small">
+                ${displayTime}
+                </span></li>
+              <li> <span class="chat-box mine ">${a.data().content}</span></li>
+              
               `;
               $('.chat-content').append(chatContent)
 

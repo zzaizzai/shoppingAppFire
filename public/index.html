@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="main.css">
 
 <body>
+  
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">ShoppingMall</a>
@@ -45,26 +46,16 @@
             <a class="nav-link" href="/upload.html">Upload</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
+            <a class="nav-link" href="/chat2.html">Chat2</a>
           </li>
         </ul>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
       </div>
     </div>
   </nav>
 
   <div class="container mt-3">
-    <!-- <div class="product">
-      <div class="thumbnail" style="background-image: url('https://via.placeholder.com/350')"></div>
-      <div class="flex-grow-1 p-4">
-        <h5 class="title">아기다스 신발</h5>
-        <p class="date">2030년 1월 8일</p>
-        <p class="price">20000원</p>
-        <p class="float-end">0</p>
-      </div> -->
+
+
   </div>
 
   </div>
@@ -92,15 +83,15 @@
 
         var template =
           `<div class="product">
-      <div class="thumbnail" style="background-image: url('${doc.data().image}')"></div>
-      <div class="flex-grow-1 p-4">
-        <h5 class="title"><a href="/detail.html?id=${doc.id}">${doc.data().title}</a></h5>
-        <p class="date">Date: ${doc.data().date.toDate()}</p>
-        <p class="price">Uploader: ${doc.data().userName}</p>
-        <p class="price">Price: $${doc.data().price}</p>
-        <p class="float-end">❤0</p>
-      </div>
-      </div>`;
+          <div class="thumbnail" style="background-image: url('${doc.data().image}')"></div>
+          <div class="flex-grow-1 p-4">
+          <h5 class="title"><a href="/detail.html?id=${doc.id}">${doc.data().title}</a></h5>
+          <p class="date">Date: ${doc.data().date.toDate()}</p>
+          <p class="price">Uploader: ${doc.data().userName}</p>
+          <p class="price">Price: $${doc.data().price}</p>
+          <p class="float-end">❤0</p>
+          </div>
+          </div>`;
         $('.container').append(template)
       })
     })
