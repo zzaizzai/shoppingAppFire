@@ -127,13 +127,49 @@
 
     $('#chat').click(function () {
       var data = {
-        who: [myUid, sellerUid],
+        buyerUid: myUid,
+        sellerUid: sellerUid,
+        productUid: queryString.get('id'),
         product: productTitle,
+        who: [myUid, sellerUid],
         date: new Date(),
       }
-      db.collection('chatroom').add(data).then((result) => {
-        window.location.href = '/chat.html?id=' + result.id
+
+      // add: if there is a chatroom including me about the product already, enter the chatroom
+      // if there is not, create a new chatroom
+
+      db.collection('chatroom').where('productUid', '==', queryString.get('id')).get().then((result) => {
+        result.forEach((a) => {
+          console.log(a.data())
+          //when you are buyer, the chatroom alredat exists
+          if (a.data().buyerUid == myUid) {
+            console.log('chatroom exist, u r buyer')
+            window.location.href = '/chat2.html?id=' + a.id
+
+            //you are seller
+          } else if (a.data().buyerUid != myUid && a.data().sellerUid == myUid) {
+            console.log('2')
+            window.location.href = '/chat2.html?id=' + a.id
+
+            //create a new chatroom
+          } else {
+            db.collection('chatroom').add(data).then((newData) => {
+              console.log('create new chatroom')
+              window.location.href = '/chat2.html?id=' + newData.id
+            })
+          }
+        })
+
+        //result: no data in chatroom so that you create a new chatroom
+        db.collection('chatroom').add(data).then((newData) => {
+          console.log('nodata')
+          window.location.href = '/chat2.html?id=' + newData.id
+        })
       })
+      // db.collection('chatroom').add(data).then((newData) => {
+      //   console.log('3')
+      //   window.location.href = '/chat.html?id=' + newData.id
+      // })
     })
 
 
