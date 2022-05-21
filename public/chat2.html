@@ -35,10 +35,10 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/index.html">Home</a>
+            <a class="nav-link" aria-current="page" href="/index.html">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/login.html">Log In</a>
+            <a class="nav-link" href="/list.html">List</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/mypage.html">Mypage</a>
@@ -47,7 +47,12 @@
             <a class="nav-link" href="/upload.html">Upload</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/chat2.html">Chat2</a>
+            <a class="nav-link active" href="/chat2.html">Chat2</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav d-flex mb-lg-0 me-2">
+          <li class=" nav-item " id="login">
+            <a class="nav-link active" href="/login.html">Log In</a>
           </li>
         </ul>
       </div>
@@ -58,11 +63,11 @@
     <div class="row">
       <div class="col-3 p-0">
         <ul class="list-group chat-list">
-
-          <li class="list-group-item">
+          <li class="list-group-item active chat-active">
             <h6>chatroom1</h6>
             <h6 class="text-small">chatroom id</h6>
           </li>
+
         </ul>
       </div>
       <div class="col-9 p-0">
@@ -85,6 +90,7 @@
 
   <script>
 
+
     var firebaseConfig = {
       apiKey: "AIzaSyAnQ9d_hZM-rQ5xXlYPzTD96JjuY-xO3RI",
       authDomain: "shoppingappfirebase-823de.firebaseapp.com",
@@ -98,9 +104,14 @@
 
   <script>
 
+    var myUid = JSON.parse(sessionStorage.getItem('user')).uid;
+    var displayName = JSON.parse(sessionStorage.getItem('user')).displayName;
+    if (displayName) {
+      $('#login').children('a').html(displayName)
+    }
+
     const db = firebase.firestore();
     const storage = firebase.storage();
-    var myUid = JSON.parse(sessionStorage.getItem('user')).uid;
     var chatId;
     var receiverUid;
 
@@ -111,11 +122,25 @@
         sender_uid: myUid,
         receiver_uid: receiverUid
       }
-      db.collection('chatroom').doc(chatId).collection('messages').add(data)
+      $('#chat-input').val('');
+
+
+      if (data.content.length > 0 && data.content.length < 999) {
+        var lastDate = new Date();
+        db.collection('chatroom').doc(chatId).update({ "lastDate": lastDate })
+
+        db.collection('chatroom').doc(chatId).collection('messages').add(data)
+
+      } else {
+        console.log("write message")
+
+      }
+
     })
 
+
     //show the chat list including your uid when you enter the chat.html 
-    db.collection('chatroom').where('who', 'array-contains', myUid).get().then((result) => {
+    db.collection('chatroom').where('who', 'array-contains', myUid).orderBy('lastDate', 'desc').get().then((result) => {
       result.forEach((a) => {
         console.log(a.data())
 
@@ -125,17 +150,16 @@
         } else if (a.data().who[1] != myUid) {
           receiver_uid = a.data().who[1]
         }
-        console.log(receiver_uid)
-
 
         //will: display seller name, delete chatid, receovere uid
-        var template =
+        var chatListTemplate =
           `<li class="list-group-item">
             <h6>product: ${a.data().product}</h6>
+            <p class="text-small" >${changeToDate(a.data().lastDate)}</p>
             <p class="text-small" id="chatID">${a.id}</p>
             <p class="text-small" id="receiver_uid" >${receiver_uid}</p>
           </li>`
-        $('.chat-list').append(template)
+        $('.chat-list').append(chatListTemplate)
       })
 
 
@@ -147,8 +171,8 @@
         console.log(receiverUid)
 
         //express current chatroom
-        $('.list-group-item').removeClass('active')
-        $(this).addClass('active')
+        $('.list-group-item').removeClass('active chat-active')
+        $(this).addClass('active chat-active')
 
         //stop event bubbling
         e.stopImmediatePropagation();
@@ -156,43 +180,52 @@
 
         db.collection('chatroom').doc(chatId).collection('messages').orderBy('date').onSnapshot((result) => {
           $('.chat-content').html('')
-          result.forEach((a) => {
+          result.forEach((b) => {
 
-            var timeYear = a.data().date.toDate().getFullYear()
-            var timeMonth = ("0" + (a.data().date.toDate().getMonth() + 1)).slice(-2);
-            var timeDate = ("0" + a.data().date.toDate().getDate()).slice(-2);
-            var timeHour = ("0" + a.data().date.toDate().getHours()).slice(-2);
-            var timeMin = ("0" + a.data().date.toDate().getMinutes()).slice(-2);
-            var displayTime = timeMonth + "." + timeHour + " " + timeDate + ":" + timeMin;
 
 
             // console.log('sender:' + a.data().sender_uid)
-            if (a.data().sender_uid != myUid) {
+            if (b.data().sender_uid != myUid) {
               var chatContent =
                 `
-                <li><span class="text-small">${displayTime}</span></li>
-              <li> <span class="chat-box">${a.data().content}</span></li>
+
+              <li> <span class="chat-box">${b.data().content}</span><span class="text-small">${changeToDate(b.data().date)}</span></li>
               `;
               $('.chat-content').append(chatContent)
 
-            } else if (a.data().sender_uid == myUid) {
+            } else if (b.data().sender_uid == myUid) {
               var chatContent =
                 `
-              <li><span class= "mine text-small">
-                ${displayTime}
-                </span></li>
-              <li> <span class="chat-box mine ">${a.data().content}</span></li>
+              <li> <span class="chat-box mine">${b.data().content}</span><span class= "mine text-small">${changeToDate(b.data().date)}</span></li>
               
               `;
               $('.chat-content').append(chatContent)
 
             }
 
+            $('.chat-content').scrollTop(document.body.scrollHeight)
+
 
           })
         })
       })
     })
+
+
+
+
+    function changeToDate(a) {
+
+      var timeYear = a.toDate().getFullYear()
+      var timeMonth = ("0" + (a.toDate().getMonth() + 1)).slice(-2);
+      var timeDate = ("0" + a.toDate().getDate()).slice(-2);
+      var timeHour = ("0" + a.toDate().getHours()).slice(-2);
+      var timeMin = ("0" + a.toDate().getMinutes()).slice(-2);
+      var displayTime = timeMonth + "." + timeHour + " " + timeDate + ":" + timeMin;
+      return displayTime
+
+    }
+
 
 
 

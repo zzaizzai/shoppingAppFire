@@ -100,9 +100,11 @@
     const db = firebase.firestore();
     const storage = firebase.storage();
 
-    var myUid = JSON.parse(sessionStorage.getItem('user')).uid
+    var myUid = JSON.parse(sessionStorage.getItem('user')).uid;
+    var myName = JSON.parse(sessionStorage.getItem('user')).displayName;
     var sellerUid;
     var producTitle;
+    var sellerName;
 
     //get id from current URL
     var queryString = new URLSearchParams(window.location.search);
@@ -112,6 +114,7 @@
 
       sellerUid = result.data().uid;
       productTitle = result.data().title;
+      sellerName = result.data().userName
 
 
       console.log(result.data());
@@ -126,14 +129,20 @@
     })
 
     $('#chat').click(function () {
+      var currentDate = new Date()
       var data = {
         buyerUid: myUid,
+        buyerName: myName,
         sellerUid: sellerUid,
+        sellerName: sellerName,
         productUid: queryString.get('id'),
         product: productTitle,
         who: [myUid, sellerUid],
-        date: new Date(),
+        lastDate: currentDate,
+        date: currentDate,
+
       }
+
 
       // add: if there is a chatroom including me about the product already, enter the chatroom
       // if there is not, create a new chatroom
