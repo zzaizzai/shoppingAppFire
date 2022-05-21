@@ -9,6 +9,11 @@ firebase serve --port=9000
 
 http://127.0.0.1:9000/
 
+front: js
+DB, backend: firebase
+
+
+
 ------------------------------------------
 
 shoppingappfirebase-823de.firebaseapp.com

@@ -23,7 +23,8 @@
 <link rel="stylesheet" href="main.css">
 
 <body>
-  
+
+  <!-- navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">ShoppingMall</a>
@@ -37,11 +38,11 @@
             <a class="nav-link active" aria-current="page" href="/index.html">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/login.html">Log In</a>
+            <a class="nav-link" href="/list.html">List</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/mypage.html">Mypage</a>
-        </li>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="/upload.html">Upload</a>
           </li>
@@ -49,14 +50,18 @@
             <a class="nav-link" href="/chat2.html">Chat2</a>
           </li>
         </ul>
+        <ul class="navbar-nav d-flex mb-lg-0 me-2">
+          <li class=" nav-item " id="login">
+            <a class="nav-link active" href="/login.html">Log In</a>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
+  <p>
+    shopping main page
+  </p>
 
-  <div class="container mt-3">
-
-
-  </div>
 
   </div>
 
@@ -71,31 +76,26 @@
       appId: "1:368319933416:web:b6e72ff435d54f85c8525d",
     };
     firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+
+
   </script>
 
   <script>
-    //Get Product Data from firebase
-    const db = firebase.firestore();
-    db.collection('product').get().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        console.log(doc.data());
 
 
-        var template =
-          `<div class="product">
-          <div class="thumbnail" style="background-image: url('${doc.data().image}')"></div>
-          <div class="flex-grow-1 p-4">
-          <h5 class="title"><a href="/detail.html?id=${doc.id}">${doc.data().title}</a></h5>
-          <p class="date">Date: ${doc.data().date.toDate()}</p>
-          <p class="price">Uploader: ${doc.data().userName}</p>
-          <p class="price">Price: $${doc.data().price}</p>
-          <p class="float-end">❤0</p>
-          </div>
-          </div>`;
-        $('.container').append(template)
-      })
-    })
+    var myUid;
+    var displayName
 
+    if (JSON.parse(sessionStorage.getItem('user') != null)) {
+      myUid = JSON.parse(sessionStorage.getItem('user')).uid
+      displayName = JSON.parse(sessionStorage.getItem('user')).displayName;
+    }
+
+    if (displayName != null) {
+      $('#login').children('a').html(displayName)
+    }
 
   </script>
 </body>

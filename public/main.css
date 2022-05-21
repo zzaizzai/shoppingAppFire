@@ -60,9 +60,7 @@
   float: right;
 }
 
-
 .chatroom-active {
-  background: gray;
-  color: gray;
-
+  color:white;
+  background-color: gainsboro;
 }
