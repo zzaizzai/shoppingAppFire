@@ -63,7 +63,7 @@
     <div class="row">
       <div class="col-3 p-0">
         <ul class="list-group chat-list">
-          <li class="list-group-item active chat-active">
+          <li class="list-group-item chatroom-active ">
             <h6>chatroom1</h6>
             <h6 class="text-small">chatroom id</h6>
           </li>
@@ -171,8 +171,8 @@
         console.log(receiverUid)
 
         //express current chatroom
-        $('.list-group-item').removeClass('active chat-active')
-        $(this).addClass('active chat-active')
+        $('.list-group-item').removeClass('chatroom-active')
+        $(this).addClass('chatroom-active')
 
         //stop event bubbling
         e.stopImmediatePropagation();
@@ -189,14 +189,14 @@
               var chatContent =
                 `
 
-              <li> <span class="chat-box">${b.data().content}</span><span class="text-small">${changeToDate(b.data().date)}</span></li>
+              <li> <span class="chat-box">${b.data().content}</span><span class="text-small mx-3">${changeToDate(b.data().date)}</span></li>
               `;
               $('.chat-content').append(chatContent)
 
             } else if (b.data().sender_uid == myUid) {
               var chatContent =
                 `
-              <li> <span class="chat-box mine">${b.data().content}</span><span class= "mine text-small">${changeToDate(b.data().date)}</span></li>
+              <li> <span class="chat-box mine">${b.data().content}</span><span class= "mine text-small mx-3">${changeToDate(b.data().date)}</span></li>
               
               `;
               $('.chat-content').append(chatContent)

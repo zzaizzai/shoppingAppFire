@@ -47,6 +47,8 @@
   font-size: 12px;
   color: gray;
   margin-bottom: 0;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .chat-box {
@@ -61,6 +63,6 @@
 }
 
 .chatroom-active {
-  color:white;
-  background-color: gainsboro;
+  color:black !important;
+  background-color: #eee !important;
 }
